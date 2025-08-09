@@ -1,4 +1,4 @@
-from langchain_google_genai import GoogleGenerativeAIEmbeddings, ChatGoogleGenerativeAI
+from langchain_google_genai import GoogleGenerativeAIEmbeddings,ChatGoogleGenerativeAI
 from youtube_transcript_api import YouTubeTranscriptApi, TranscriptsDisabled
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import FAISS
@@ -6,12 +6,9 @@ from langchain_core.prompts import PromptTemplate
 from langchain_core.runnables import RunnableParallel, RunnablePassthrough, RunnableLambda
 from langchain_core.output_parsers import StrOutputParser
 from urllib.parse import urlparse, parse_qs
+from youtube_transcript_api import YouTubeTranscriptApi
 import streamlit as st
 import os
-import nest_asyncio
-import asyncio
-
-nest_asyncio.apply()  # patch asyncio to allow nested event loops in Streamlit
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
 
@@ -88,8 +85,7 @@ if st.button("Submit"):
             final_chain = parallel_chain | prompt | model | parser
 
             try:
-                # Run the async invoke with asyncio.run()
-                result = asyncio.run(final_chain.invoke(user_query))
+                result = final_chain.invoke(user_query)
                 st.subheader("Answer")
                 st.write(result)
             except Exception as e:
