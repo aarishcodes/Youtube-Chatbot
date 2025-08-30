@@ -9,8 +9,19 @@ from urllib.parse import urlparse, parse_qs
 from youtube_transcript_api import YouTubeTranscriptApi
 import streamlit as st
 import os
+# from dotenv import load_dotenv
+import asyncio 
+
+    
+try:
+    asyncio.get_running_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())    
+    
+# load_dotenv()
 
 GOOGLE_API_KEY = os.getenv("GOOGLE_API_KEY")
+
 
 def extract_youtube_id(url: str) -> str:
     parsed_url = urlparse(url)
